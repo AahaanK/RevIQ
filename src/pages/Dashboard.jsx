@@ -1,54 +1,59 @@
 export default function Dashboard() {
-  const sampleMatrixData = [
-    { id: 1, review: "The food at Trishul was locally sourced and incredible! The host was super warm.", sentiment: "Positive", theme: "Food & Host", response: "Thank you! We take pride in serving organic, local delicacies." },
-    { id: 2, review: "Room cleanliness was amazing, but the eco-cabin was quite far from the main city roads.", sentiment: "Neutral", theme: "Cleanliness & Location", response: "Glad you enjoyed our pristine cabins! Our remote location preserves peace." },
-    { id: 3, review: "Water heating system took almost 20 minutes to kick on in the eco-shower.", sentiment: "Negative", theme: "Experience", response: "Apologies for the delay; our solar power optimization grids are being tuned." }
+  const sampleDataMatrix = [
+    { id: 'TX-104', review: "The hot water system inside the cabin took 15 minutes to warm up.", sentiment: "Negative", theme: "Experience", action: "Booster stove dispatch ordered" },
+    { id: 'TX-105', review: "Stunning forest environment! The organic dishes were highly incredible.", sentiment: "Positive", theme: "Food & Location", action: "Standard thank-you draft sent" },
+    { id: 'TX-106', review: "The wilderness cabin was lovely, but trails were slightly dark at midnight.", sentiment: "Neutral", theme: "Security / Trails", action: "Solar marker deployment flagged" }
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12 space-y-6">
-      <div className="border-b border-slate-200 pb-4 flex flex-col md:flex-row justify-between items-start md:items-center">
+    <div className="space-y-6">
+      
+      {/* Title Header Panel */}
+      <div className="bg-gradient-to-r from-emerald-950 to-emerald-900 text-white p-6 sm:p-8 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-xs">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">Insight Dashboard & Review Matrix</h1>
-          <p className="text-slate-500 text-sm mt-1">Structured telemetry breakdown of incoming Trishul Eco-Homestay reviews.</p>
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight">Review Ingestion Matrix</h1>
+          <p className="text-emerald-100 text-xs sm:text-sm mt-0.5">Structured telemetry breakdown of incoming Trishul Eco-Homestay reviews.</p>
         </div>
-        <button className="mt-4 md:mt-0 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-lg transition">
-          Bulk Upload CSV
+        <button className="bg-rose-800 hover:bg-rose-700 text-white text-xs font-bold uppercase tracking-widest px-5 py-3 rounded-lg transition-all shadow-md shrink-0 active:translate-y-px">
+          Bulk CSV Stream Ingestion
         </button>
       </div>
 
-      {/* Review Matrix Interactive Table Mockup */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      {/* Modern High-Density Table Component Grid */}
+      <div className="bg-white border border-stone-200 rounded-xl shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-200 text-slate-400 text-xs font-bold uppercase tracking-wider">
-                <th className="p-4">Raw Review Content</th>
-                <th className="p-4">Sentiment</th>
-                <th className="p-4">Extracted Theme</th>
-                <th className="p-4">Suggested Management Action Response</th>
+              <tr className="bg-stone-50/80 border-b border-stone-200 text-stone-500 text-[10px] font-bold uppercase tracking-widest font-mono">
+                <th className="p-4 sm:p-5">Log Token</th>
+                <th className="p-4 sm:p-5">Extracted Feedback String</th>
+                <th className="p-4 sm:p-5">Sentiment Label</th>
+                <th className="p-4 sm:p-5">Target Theme Node</th>
+                <th className="p-4 sm:p-5">Assigned Operations Action</th>
               </tr>
             </thead>
-            <tbody className="text-xs divide-y divide-slate-100 text-slate-700">
-              {sampleMatrixData.map((item) => (
-                <tr key={item.id} className="hover:bg-slate-50/50 transition">
-                  <td className="p-4 max-w-xs font-medium truncate">{item.review}</td>
-                  <td className="p-4">
-                    <span className={`px-2 py-0.5 font-bold rounded-full text-[10px] ${
-                      item.sentiment === "Positive" ? "bg-green-100 text-green-800" :
-                      item.sentiment === "Neutral" ? "bg-yellow-100 text-yellow-800" : "bg-red-100 text-red-800"
+            <tbody className="text-xs sm:text-sm divide-y divide-stone-100 text-stone-700 font-sans">
+              {sampleDataMatrix.map((item) => (
+                <tr key={item.id} className="hover:bg-stone-50/40 transition-colors">
+                  <td className="p-4 sm:p-5 font-mono font-bold text-emerald-950">{item.id}</td>
+                  <td className="p-4 sm:p-5 max-w-xs truncate text-stone-600 font-medium">{item.review}</td>
+                  <td className="p-4 sm:p-5 whitespace-nowrap">
+                    <span className={`px-2.5 py-1 text-[9px] font-bold rounded-md uppercase tracking-wider border ${
+                      item.sentiment === 'Positive' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' :
+                      item.sentiment === 'Neutral' ? 'bg-amber-50 text-amber-800 border-amber-200' : 'bg-rose-50 text-rose-900 border-rose-200'
                     }`}>
                       {item.sentiment}
                     </span>
                   </td>
-                  <td className="p-4 font-mono text-slate-500">{item.theme}</td>
-                  <td className="p-4 italic text-slate-600">"{item.response}"</td>
+                  <td className="p-4 sm:p-5 font-mono text-xs text-stone-500 whitespace-nowrap">{item.theme}</td>
+                  <td className="p-4 sm:p-5 text-rose-950 font-semibold italic whitespace-nowrap">{item.action}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       </div>
+
     </div>
   );
 }
