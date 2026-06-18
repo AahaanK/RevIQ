@@ -12,11 +12,11 @@ import Login from './pages/Login';
 export default function App() {
   return (
     <Router>
-      {/* Expanded foundational backdrop canvas to blend background tones seamlessly */}
-      <div className="min-h-screen bg-stone-100 text-stone-800 flex flex-col font-sans antialiased selection:bg-emerald-900 selection:text-white">
+      {/* Lavish Dark Forest Green Base Layer */}
+      <div className="min-h-screen bg-[#052214] text-[#F5F5DC] flex flex-col font-sans antialiased selection:bg-[#2d5a27] selection:text-[#F5F5DC]">
         <Navbar />
         
-        {/* REMOVED the double max-width pinch. Let pages define their own full-width bleeding zones */}
+        {/* Full-width container allowing components to sit elegantly on the canvas */}
         <main className="flex-grow w-full">
           <Routes>
             <Route path="/" element={<Home />} />

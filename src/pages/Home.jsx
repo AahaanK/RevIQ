@@ -23,29 +23,29 @@ export default function Home() {
   ];
 
   return (
-    <div className="w-full bg-stone-50">
+    <div className="w-full bg-[#052214]">
       
-      {/* 1. HERO SECTION: Spans cleanly from edge-to-edge to correct "zoomed out" margins */}
-      <div className="bg-gradient-to-br from-emerald-950 via-emerald-900 to-stone-900 text-white w-full py-20 lg:py-28 px-6 md:px-12 lg:px-24 border-b-4 border-rose-900 shadow-sm relative overflow-hidden">
-        <div className="absolute right-0 bottom-0 opacity-5 pointer-events-none hidden xl:block">
-          <span className="text-[260px] font-black tracking-tighter select-none">REVIQ</span>
+      {/* HERO SECTION: Fully integrated with the rich dark canvas layout */}
+      <div className="w-full py-20 lg:py-28 px-6 md:px-12 lg:px-24 border-b border-[#143d25] relative overflow-hidden bg-gradient-to-b from-[#041c10] to-[#052214]">
+        <div className="absolute right-0 bottom-0 opacity-[0.02] pointer-events-none hidden xl:block">
+          <span className="text-[260px] font-black tracking-tighter select-none text-[#F5F5DC]">REVIQ</span>
         </div>
 
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
           <div className="lg:col-span-8 space-y-6 text-left">
-            <span className="inline-block bg-rose-900/50 border border-rose-800 text-rose-200 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded">
+            <span className="inline-block bg-[#143d25] border border-[#235839] text-[#D0E7D2] text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-sm">
               Hospitality Analytics Automation
             </span>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-none">
-              Transforming Customer Review Data Into <span className="text-emerald-400">Operational Precision</span>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-none text-[#F5F5DC]">
+              Transforming Customer Review Data Into <span className="text-[#D0E7D2]">Operational Precision</span>
             </h1>
-            <p className="text-stone-300 text-sm sm:text-base leading-relaxed max-w-3xl">
+            <p className="text-[#c2c2aa] text-sm sm:text-base leading-relaxed max-w-3xl">
               RevIQ functions as Trishul Eco-Homestays administrative automation baseline. Process unstructured feedback strings, neutralize churn probabilities, and automate text templates instantly.
             </p>
             
-            <div className="p-4 border-l-4 border-rose-800 bg-stone-950/40 rounded-r-lg max-w-2xl">
-              <p className="text-stone-200 italic text-xs sm:text-sm font-serif leading-relaxed">
+            <div className="p-4 border-l-4 border-[#1e4620] bg-[#041c10]/60 rounded-r-lg max-w-2xl">
+              <p className="text-[#b0b095] italic text-xs sm:text-sm font-serif leading-relaxed">
                 "Our reputation rests on our agility. RevIQ strips away diagnostic delay, giving our staff immediate clarity on core systemic feedback loops."
               </p>
             </div>
@@ -53,13 +53,13 @@ export default function Home() {
             <div className="pt-4 flex flex-wrap gap-4">
               <Link 
                 to="/priority-ai" 
-                className="bg-rose-800 hover:bg-rose-700 text-white text-xs font-bold uppercase tracking-widest px-8 py-4 rounded-lg shadow-lg shadow-rose-950/40 transition-all hover:-translate-y-0.5 active:translate-y-0"
+                className="bg-[#1e4620] border border-[#2d5a27] hover:bg-[#2d5a27] text-[#F5F5DC] text-xs font-bold uppercase tracking-widest px-8 py-4 rounded-md shadow-md transition-colors"
               >
                 Launch Analysis Stack
               </Link>
               <Link 
                 to="/dashboard" 
-                className="bg-emerald-950 border border-emerald-800 hover:border-emerald-700 text-stone-200 hover:text-white text-xs font-bold uppercase tracking-widest px-8 py-4 rounded-lg transition-colors shadow-inner"
+                className="bg-[#041c10] border border-[#143d25] hover:bg-[#082d1b] text-[#c2c2aa] hover:text-[#F5F5DC] text-xs font-bold uppercase tracking-widest px-8 py-4 rounded-md transition-colors"
               >
                 View Historical Log Matrix
               </Link>
@@ -67,11 +67,11 @@ export default function Home() {
           </div>
 
           <div className="hidden lg:block lg:col-span-4 justify-self-center w-full">
-            <div className="bg-emerald-900/20 p-4 border border-emerald-800/40 rounded-2xl backdrop-blur-xs">
+            <div className="bg-[#041c10] p-4 border border-[#143d25] rounded-xl shadow-2xl">
               <img 
                 src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=500&q=80" 
-                alt="System Mesh Visualizer Architecture" 
-                className="rounded-xl shadow-2xl object-cover h-64 w-full mix-blend-luminosity brightness-110"
+                alt="System Mesh Visualizer" 
+                className="rounded-lg object-cover h-64 w-full opacity-60 mix-blend-luminosity hover:opacity-80 transition-opacity duration-500"
               />
             </div>
           </div>
@@ -79,35 +79,39 @@ export default function Home() {
         </div>
       </div>
 
-      {/* 2. CAPABILITIES GRID: Uses optimal multi-column flex ratios to sit balanced on large screens */}
+      {/* CORE CAPABILITIES: Features beautiful transformational hover transitions */}
       <div className="w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-8 py-20 space-y-12">
         
-        <div className="border-b border-stone-200 pb-4 text-left">
-          <span className="text-xs font-bold uppercase tracking-widest text-rose-900 block mb-1">System Processing Segments</span>
-          <h2 className="text-2xl sm:text-3xl font-black text-emerald-950 tracking-tight">Active Analytics Architectures</h2>
-          <p className="text-stone-500 text-xs sm:text-sm mt-1">Select an isolated telemetry terminal workspace below to begin processing copied guest logs.</p>
+        <div className="border-b border-[#143d25] pb-6 text-left">
+          <span className="text-xs font-bold uppercase tracking-widest text-[#D0E7D2] block mb-1">System Processing Segments</span>
+          <h2 className="text-2xl sm:text-3xl font-black text-[#F5F5DC] tracking-tight">Active Analytics Architectures</h2>
+          <p className="text-[#c2c2aa] text-xs sm:text-sm mt-1">Select an isolated telemetry terminal workspace below to begin processing copied guest logs.</p>
         </div>
 
+        {/* Dynamic Responsive Flex Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           {featureSummaries.map((feat) => (
             <div 
               key={feat.title} 
-              className="bg-white border border-stone-200 rounded-xl p-6 sm:p-8 flex flex-col justify-between shadow-xs hover:shadow-xl transition-all duration-300 group border-t-4 border-t-stone-300 hover:border-t-emerald-900 relative"
+              className="premium-card-transition bg-[#041c10] border border-[#143d25] rounded-xl p-6 sm:p-8 flex flex-col justify-between shadow-md hover:bg-[#D0E7D2] hover:text-[#052214] group"
             >
               <div className="space-y-4">
-                <div className="text-2xl bg-stone-50 h-12 w-12 rounded-lg flex items-center justify-center border border-stone-200 group-hover:bg-emerald-50 group-hover:border-emerald-200 transition-colors">
+                {/* Icon Box Context */}
+                <div className="premium-card-transition text-2xl bg-[#052214] h-12 w-12 rounded-lg flex items-center justify-center border border-[#143d25] group-hover:bg-[#b8d8ba] group-hover:border-[#96bd99]">
                   {feat.icon}
                 </div>
-                <h3 className="text-lg font-bold text-emerald-950 tracking-tight group-hover:text-emerald-900 transition-colors">{feat.title}</h3>
-                <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-sans">{feat.desc}</p>
+                <h3 className="text-lg font-bold tracking-tight text-[#F5F5DC] group-hover:text-[#052214] premium-card-transition">
+                  {feat.title}
+                </h3>
+                <p className="text-xs sm:text-sm text-[#c2c2aa] group-hover:text-[#1c3a2b] leading-relaxed font-sans premium-card-transition">
+                  {feat.desc}
+                </p>
               </div>
-              <div className="pt-6 mt-6 border-t border-stone-100">
-                <Link 
-                  to={feat.path} 
-                  className="inline-flex items-center text-xs font-bold uppercase tracking-widest text-rose-900 group-hover:text-emerald-900 transition-colors"
-                >
-                  Access Terminal Core <span className="ml-2 transition-transform group-hover:translate-x-1">→</span>
-                </Link>
+              
+              <div className="pt-6 mt-6 border-t border-[#143d25]/60 group-hover:border-[#1c3a2b]/20 premium-card-transition">
+                <span className="inline-flex items-center text-xs font-bold uppercase tracking-widest text-[#D0E7D2] group-hover:text-[#052214] premium-card-transition">
+                  Access Terminal Core <span className="ml-2 transition-transform group-hover:translate-x-1.5">→</span>
+                </span>
               </div>
             </div>
           ))}
