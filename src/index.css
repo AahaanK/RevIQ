@@ -2,12 +2,10 @@
 
 @layer base {
   body {
-    background-color: #052214; /* Deep Forest Green canvas */
-    color: #f5f5dc;            /* Soft Beige base text */
+    @apply bg-slate-50 text-slate-800 font-sans antialiased;
   }
 }
 
-/* Custom smooth transition rule for elegant card animations */
-.premium-card-transition {
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+.premium-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }

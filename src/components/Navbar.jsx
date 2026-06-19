@@ -17,21 +17,19 @@ export default function Navbar() {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <nav className="bg-[#041c10] border-b border-[#143d25] sticky top-0 z-50 w-full shadow-md">
-      <div className="w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-8">
+    <nav className="bg-emerald-950 border-b border-emerald-900 sticky top-0 z-50 w-full shadow-md">
+      <div className="w-full max-w-7xl mx-auto px-6 md:px-12">
         <div className="flex justify-between h-20 items-center">
           
-          {/* Logo Identity */}
           <Link to="/" className="flex items-center space-x-3 group shrink-0">
-            <span className="text-2xl font-black tracking-tight text-[#F5F5DC] transition-colors group-hover:text-[#D0E7D2]">
+            <span className="text-2xl font-black tracking-tight text-amber-50 transition-colors group-hover:text-emerald-300">
               RevIQ
             </span>
-            <span className="bg-[#143d25] border border-[#235839] text-[#D0E7D2] text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-sm">
+            <span className="bg-emerald-900 border border-emerald-800 text-emerald-200 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-sm">
               Trishul Staff Portal
             </span>
           </Link>
 
-          {/* Symmetrical Links */}
           <div className="hidden xl:flex items-center space-x-1">
             {navItems.map((item) => (
               <Link
@@ -39,8 +37,8 @@ export default function Navbar() {
                 to={item.path}
                 className={`text-xs font-bold uppercase tracking-wider px-4 py-2.5 rounded-md transition-all ${
                   isActive(item.path) 
-                    ? 'bg-[#143d25] text-[#F5F5DC] border border-[#235839]' 
-                    : 'text-[#c2c2aa] hover:bg-[#082d1b] hover:text-[#F5F5DC]'
+                    ? 'bg-emerald-800 text-white border border-emerald-700 shadow-sm' 
+                    : 'text-emerald-200 hover:bg-emerald-900 hover:text-white'
                 }`}
               >
                 {item.name}
@@ -48,21 +46,19 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Action Gateway */}
           <div className="hidden xl:flex items-center shrink-0">
             <Link 
               to="/login" 
-              className="bg-[#1e4620] border border-[#2d5a27] hover:bg-[#2d5a27] text-[#F5F5DC] text-xs font-bold uppercase tracking-widest px-6 py-3 rounded-md transition-colors"
+              className="bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold uppercase tracking-widest px-6 py-3 rounded-md transition-colors shadow-sm"
             >
               Portal Login
             </Link>
           </div>
 
-          {/* Responsive Mobile Trigger */}
           <div className="xl:hidden flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-[#F5F5DC] hover:text-[#D0E7D2] p-2 rounded-md hover:bg-[#082d1b] focus:outline-none"
+              className="text-emerald-100 hover:text-white p-2 rounded-md hover:bg-emerald-900 focus:outline-none"
             >
               <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 {isOpen ? (
@@ -77,9 +73,8 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Drawer Panels Mobile */}
       {isOpen && (
-        <div className="xl:hidden bg-[#041c10] border-b border-[#143d25]">
+        <div className="xl:hidden bg-emerald-950 border-b border-emerald-900">
           <div className="px-4 pt-2 pb-6 space-y-1">
             {navItems.map((item) => (
               <Link
@@ -87,17 +82,17 @@ export default function Navbar() {
                 to={item.path}
                 onClick={() => setIsOpen(false)}
                 className={`block px-4 py-3 rounded-md text-xs font-bold uppercase tracking-wide transition-colors ${
-                  isActive(item.path) ? 'bg-[#143d25] text-[#F5F5DC]' : 'text-[#c2c2aa] hover:bg-[#082d1b]'
+                  isActive(item.path) ? 'bg-emerald-800 text-white' : 'text-emerald-200 hover:bg-emerald-900'
                 }`}
               >
                 {item.name}
               </Link>
             ))}
-            <div className="pt-4 border-t border-[#143d25] mt-2 px-4">
+            <div className="pt-4 border-t border-emerald-900 mt-2 px-4">
               <Link
                 to="/login"
                 onClick={() => setIsOpen(false)}
-                className="block w-full text-center bg-[#1e4620] text-[#F5F5DC] text-xs font-bold uppercase tracking-widest py-3 rounded-md"
+                className="block w-full text-center bg-emerald-700 text-white text-xs font-bold uppercase tracking-widest py-3 rounded-md"
               >
                 Portal Login
               </Link>
