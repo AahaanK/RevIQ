@@ -1,44 +1,35 @@
 import { Link } from 'react-router-dom';
 
-export default function Footer() {
+export default function Footer({ isDarkMode }) {
   return (
-    <footer className="bg-emerald-950 text-emerald-100 border-t border-emerald-900 py-12 w-full mt-auto">
-      <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+    <footer className={`w-full py-12 px-6 md:px-12 border-t font-sans transition-all duration-300 ${
+      isDarkMode 
+        ? 'bg-[#130c24] border-purple-950/60 text-slate-400' 
+        : 'bg-slate-100 border-slate-200 text-slate-600'
+    }`}>
+      <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-6">
         
-        <div className="space-y-4 text-left">
-          <div className="flex items-center space-x-2">
-            <span className="text-xl font-black tracking-tight text-white">RevIQ</span>
-            <span className="bg-emerald-900 text-emerald-300 text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-sm">
-              v1.4.2
-            </span>
-          </div>
-          <p className="text-xs text-emerald-200/60 leading-relaxed max-w-sm">
-            Administrative terminal automation for Trishul Eco-Homestays. Managing distributed review processing pipelines with secure telemetry endpoints.
+        <div className="flex items-center space-x-3">
+          <span className={`text-lg font-black tracking-tight ${isDarkMode ? 'text-purple-300' : 'text-emerald-950'}`}>
+            RevIQ
+          </span>
+          <p className="text-xs">
+            © {new Date().getFullYear()} Trishul Eco-Homestays. Internal Telemetry Engine.
           </p>
         </div>
 
-        <div className="space-y-3 text-left">
-          <h4 className="text-xs font-bold uppercase tracking-widest text-emerald-300">Terminal Modules</h4>
-          <div className="grid grid-cols-1 gap-2 text-xs">
-            <Link to="/priority-ai" className="hover:text-white transition-colors">🎯 Action Priority AI</Link>
-            <Link to="/dissatisfaction-tracker" className="hover:text-white transition-colors">🔍 Silent Dissatisfaction Detector</Link>
-            <Link to="/recovery-predictor" className="hover:text-white transition-colors">📈 Experience Recovery Predictor</Link>
-          </div>
+        <div className="flex gap-6 text-xs font-bold uppercase tracking-wider">
+          <Link to="/about" className={`transition-colors ${isDarkMode ? 'hover:text-purple-400' : 'hover:text-emerald-800'}`}>
+            System Guidelines
+          </Link>
+          <a href="#platform-features" className={`transition-colors ${isDarkMode ? 'hover:text-purple-400' : 'hover:text-emerald-800'}`}>
+            Core Terminal
+          </a>
+          <Link to="/sandbox" className={`transition-colors ${isDarkMode ? 'hover:text-purple-400' : 'hover:text-emerald-800'}`}>
+            UI Sandbox
+          </Link>
         </div>
 
-        <div className="space-y-3 text-left">
-          <h4 className="text-xs font-bold uppercase tracking-widest text-emerald-300">System Directory</h4>
-          <div className="grid grid-cols-1 gap-2 text-xs">
-            <Link to="/dashboard" className="hover:text-white transition-colors">📋 Review Ingestion Matrix</Link>
-            <Link to="/about" className="hover:text-white transition-colors">⚙️ System Parameters</Link>
-            <Link to="/login" className="hover:text-white transition-colors">🔒 Portal Security Gateway</Link>
-          </div>
-        </div>
-
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 md:px-12 mt-10 pt-6 border-t border-emerald-900/60 text-center text-[11px] text-emerald-200/40">
-        © 2026 RevIQ Platform Interface Matrix. All administrative permissions logged securely.
       </div>
     </footer>
   );
