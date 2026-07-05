@@ -26,11 +26,13 @@ For the **revIQ Telemetry Ingestion Platform**, **PostgreSQL** hosted on **Supab
 
 ---
 
+
+
 ## 📊 Relational Database Schema Diagram
 
 Below is the visual structure mapping our database design, detailing all data fields, explicit types, primary/foreign keys, and relational constraints:
 
-![Database Schema Diagram](./schema_diagram.png)
+![Database Schema Diagram](W5_SchemaDiagram_TBI-26101174.png)
 
 > **Architectural Note:** The system establishes a strict **One-to-Many (1:N)** relationship where a single record inside the `clients` table can generate and reference multiple historic streaming indices inside the `telemetry_logs` container.
 
