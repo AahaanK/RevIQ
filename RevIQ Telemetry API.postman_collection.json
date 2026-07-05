@@ -1,0 +1,182 @@
+{
+  "info": {
+    "_postman_id": "4e474b86-bc7a-4bb5-8966-e68545a6dc0d",
+    "name": "RevIQ Telemetry API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "56232039"
+  },
+  "item": [
+    {
+      "name": "GET All Logs",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:5000/api/v1/logs",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "v1",
+            "logs"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "POST Ingest New Log",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"client\": \"Trishul Cabin Site Gamma\",\r\n  \"feedback\": \"Atmospheric pressure indicators stabilized after oxygen recycler restart.\",\r\n  \"priority\": \"High\",\r\n  \"badge\": \"Life Support\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:5000/api/v1/logs",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "v1",
+            "logs"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET Single Log by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:5000/api/v1/logs/1782662408435",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "v1",
+            "logs",
+            "1782662408435"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "PUT Update Log Parameters",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"priority\": \"Low\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:5000/api/v1/logs/1782662408435",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "v1",
+            "logs",
+            "1782662408435"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "DELETE Purge Log",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:5000/api/v1/logs/1782662388259",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "v1",
+            "logs",
+            "1782662388259"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET Advanced Filter Search",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:5000/api/v1/logs/search?priority=High",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "v1",
+            "logs",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "priority",
+              "value": "High"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

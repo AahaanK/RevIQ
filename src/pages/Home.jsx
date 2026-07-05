@@ -1,6 +1,32 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function Home({ isDarkMode }) {
+  // New full-stack state trackers for Deliverable 3 connection verification
+  const [logCount, setLogCount] = useState(0);
+  const [isConnected, setIsConnected] = useState(false);
+
+  useEffect(() => {
+    fetch('http://127.0.0.1:5000/api/v1/logs')
+      .then((res) => {
+        if (!res.ok) throw new Error("Backend unreachable");
+        return res.json();
+      })
+      .then((payload) => {
+        setIsConnected(true);
+        // Unpack based on your backend object schema layer
+        if (payload && payload.data && Array.isArray(payload.data)) {
+          setLogCount(payload.data.length);
+        } else if (Array.isArray(payload)) {
+          setLogCount(payload.length);
+        }
+      })
+      .catch((err) => {
+        console.error("Connection link offline:", err);
+        setIsConnected(false);
+      });
+  }, []);
+
   const allFeatures = [
     {
       title: 'Action Priority AI',
@@ -89,18 +115,35 @@ export default function Home({ isDarkMode }) {
       isDarkMode ? 'bg-[#0d0d12] text-slate-100' : 'bg-slate-50 text-slate-800'
     }`}>
       
-      {/* 1. HERO BANNER */}
+      {/* 1. HERO BANNER WITH LIVE CORE CONNECTION STATUS BADGES */}
       <div className={`w-full py-16 lg:py-24 px-6 md:px-12 border-b transition-all duration-300 text-white shadow-sm bg-gradient-to-b ${
         isDarkMode 
           ? 'from-[#170e2b] via-[#0f0a1c] to-[#0d0d12] border-purple-950/40' 
           : 'from-emerald-950 via-emerald-900 to-emerald-950 border-emerald-800'
       }`}>
         <div className="max-w-7xl mx-auto text-center space-y-6">
-          <span className={`inline-block border text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-sm transition-colors ${
-            isDarkMode ? 'bg-purple-950/60 border-purple-900 text-purple-300' : 'bg-emerald-800/60 border-emerald-700 text-emerald-300'
-          }`}>
-            Operational Infrastructure Console
-          </span>
+          <div className="flex justify-center gap-3 flex-wrap">
+            <span className={`inline-block border text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-sm transition-colors ${
+              isDarkMode ? 'bg-purple-950/60 border-purple-900 text-purple-300' : 'bg-emerald-800/60 border-emerald-700 text-emerald-300'
+            }`}>
+              Operational Infrastructure Console
+            </span>
+
+            {/* LIVE VERIFICATION BADGES FOR DELIVERABLE 3 */}
+            <span className={`inline-block border text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-sm ${
+              isConnected 
+                ? 'bg-green-950/80 border-green-700 text-green-400' 
+                : 'bg-rose-950/80 border-rose-900 text-rose-400'
+            }`}>
+              Kernel Link: {isConnected ? '● Connected (200 OK)' : '○ Offline'}
+            </span>
+            <span className={`inline-block border text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-sm ${
+              isDarkMode ? 'bg-slate-900 border-slate-800 text-slate-300' : 'bg-emerald-900 border-emerald-800 text-emerald-200'
+            }`}>
+              Active Buffer Size: {logCount} Logs Loaded
+            </span>
+          </div>
+
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-none text-slate-100 max-w-4xl mx-auto">
             Transforming Unstructured Feedback Into <span className={isDarkMode ? 'text-purple-400' : 'text-emerald-300'}>Operational Precision</span>
           </h1>
@@ -199,7 +242,7 @@ export default function Home({ isDarkMode }) {
         </div>
       </div>
 
-      {/* 3. PLATFORM WORKFLOW SYSTEM TIMELINE (SHINY CHARCOAL CONTAINER SHIFT) */}
+      {/* 3. PLATFORM WORKFLOW SYSTEM TIMELINE */}
       <div id="system-workflow" className={`w-full border-y py-20 scroll-mt-12 transition-colors duration-300 ${
         isDarkMode ? 'bg-gradient-to-br from-[#0d0d12] via-[#16161f] to-[#0d0d12] border-slate-900' : 'bg-slate-100 border-slate-200'
       }`}>
