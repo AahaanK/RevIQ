@@ -9,7 +9,7 @@ export default function Dashboard() {
   // 2. Wrap your data fetch inside a reusable function so the form can trigger updates
   const refreshLogs = () => {
     setLoading(true);
-    fetch('http://127.0.0.1:5000/api/v1/logs')
+    fetch('http://127.0.0.1:8000/api/v1/logs')
       .then((res) => {
         if (!res.ok) throw new Error("Backend connection failed");
         return res.json();

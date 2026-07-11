@@ -7,7 +7,7 @@ export default function Home({ isDarkMode }) {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:5000/api/v1/logs')
+    fetch('http://127.0.0.1:8000/api/v1/logs')
       .then((res) => {
         if (!res.ok) throw new Error("Backend unreachable");
         return res.json();

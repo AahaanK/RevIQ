@@ -1,9 +1,20 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 export default function Navbar({ isDarkMode, onToggleTheme }) {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  // 🔒 Dynamically read operational session state status
+  const isAuthenticated = !!localStorage.getItem("token");
+
+  // 🚪 Session Termination Execution Handler
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Break down auth payload session mapping
+    setIsOpen(false);                 // Close mobile drawer framework
+    navigate("/login");               // Drop user back to security gate interface
+  };
 
   const navItems = [
     { name: 'Console Home', path: '/' },
@@ -61,11 +72,11 @@ export default function Navbar({ isDarkMode, onToggleTheme }) {
             ))}
           </div>
 
-          {/* Utility Core Button Trays */}
+          {/* Desktop Utility Core Button Trays */}
           <div className="hidden xl:flex items-center space-x-4 shrink-0">
             <button
               onClick={onToggleTheme}
-              className={`p-2.5 rounded-md border transition-all focus:outline-none text-sm font-medium ${
+              className={`p-2.5 rounded-md border transition-all focus:outline-none text-sm font-medium cursor-pointer ${
                 isDarkMode 
                   ? 'bg-[#1c1236] border-purple-900 text-purple-300 hover:text-white' 
                   : 'bg-emerald-900 border-emerald-800 text-emerald-200 hover:text-white'
@@ -75,14 +86,24 @@ export default function Navbar({ isDarkMode, onToggleTheme }) {
               {isDarkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
             </button>
 
-            <Link 
-              to="/login" 
-              className={`text-white text-xs font-bold uppercase tracking-widest px-6 py-3 rounded-md transition-colors shadow-sm ${
-                isDarkMode ? 'bg-purple-700 hover:bg-purple-600' : 'bg-emerald-700 hover:bg-emerald-600'
-              }`}
-            >
-              Portal Login
-            </Link>
+            {/* 🚀 Dynamic Desktop Auth Button */}
+            {isAuthenticated ? (
+              <button 
+                onClick={handleLogout} 
+                className="text-white text-xs font-bold uppercase tracking-widest px-6 py-3 rounded-md transition-colors shadow-sm bg-red-700 hover:bg-red-600 cursor-pointer"
+              >
+                Terminate Session
+              </button>
+            ) : (
+              <Link 
+                to="/login" 
+                className={`text-white text-xs font-bold uppercase tracking-widest px-6 py-3 rounded-md transition-colors shadow-sm ${
+                  isDarkMode ? 'bg-purple-700 hover:bg-purple-600' : 'bg-emerald-700 hover:bg-emerald-600'
+                }`}
+              >
+                Portal Login
+              </Link>
+            )}
           </div>
 
           {/* Mobile Responsiveness Menu Control */}
@@ -137,15 +158,26 @@ export default function Navbar({ isDarkMode, onToggleTheme }) {
               >
                 {isDarkMode ? 'Toggle Light Console' : 'Toggle Dark Console'}
               </button>
-              <Link
-                to="/login"
-                onClick={() => setIsOpen(false)}
-                className={`block w-full text-center text-white text-xs font-bold uppercase tracking-widest py-3 rounded-md ${
-                  isDarkMode ? 'bg-purple-700' : 'bg-emerald-700'
-                }`}
-              >
-                Portal Login
-              </Link>
+
+              {/* 🚀 Dynamic Mobile Auth Button */}
+              {isAuthenticated ? (
+                <button
+                  onClick={handleLogout}
+                  className="block w-full text-center text-white text-xs font-bold uppercase tracking-widest py-3 rounded-md bg-red-700 hover:bg-red-600 cursor-pointer"
+                >
+                  Terminate Session
+                </button>
+              ) : (
+                <Link
+                  to="/login"
+                  onClick={() => setIsOpen(false)}
+                  className={`block w-full text-center text-white text-xs font-bold uppercase tracking-widest py-3 rounded-md ${
+                    isDarkMode ? 'bg-purple-700' : 'bg-emerald-700'
+                  }`}
+                >
+                  Portal Login
+                </Link>
+              )}
             </div>
           </div>
         </div>
