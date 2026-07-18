@@ -2,18 +2,23 @@ import os
 from fastapi import APIRouter, HTTPException, status, Request
 from pydantic import BaseModel, EmailStr, Field
 from app.security import hash_password, verify_password, create_access_token
-from app.main import limiter 
 from supabase import create_client, Client
+from dotenv import load_dotenv
+
+# Force load environment files before instantiating the client frame
+load_dotenv()
+
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 router = APIRouter(
     prefix="/api/auth",
     tags=["Authentication"]
 )
 
-# Initialize independent client context wrapper inside router frame to bypass circular reference loops
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY")
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+# Defer import to prevent circular compilation lock with main.py during hot reloads
+from app.main import limiter 
 
 class UserAuthInput(BaseModel):
     email: EmailStr
@@ -55,7 +60,6 @@ def login_user(request: Request, payload: UserAuthInput):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Login Internal Crash: {str(e)}")
 
-# 🌐 NEW DELIVERABLE NODE: Expose Supabase GitHub OAuth Provider URI Generation Gate
 @router.get("/oauth/github")
 def get_github_oauth_url():
     """
@@ -63,11 +67,23 @@ def get_github_oauth_url():
     from Supabase targeting GitHub servers.
     """
     try:
-        # Redirect link maps directly back into our React dashboard router interface frame
-        res = supabase.auth.get_oauth_nav_url(
-            provider="github", 
-            redirect_to="http://localhost:5173/dashboard"
-        )
-        return {"url": res.url}
+        # Configuration object single-dictionary execution block
+        res = supabase.auth.sign_in_with_oauth({
+            "provider": "github",
+            "options": {
+                "redirect_to": "http://localhost:5173/dashboard"
+            }
+        })
+        
+        # Parse across all response structures matching modern python-supabase versions
+        if hasattr(res, "url") and res.url:
+            return {"url": res.url}
+        if isinstance(res, dict) and "url" in res:
+            return {"url": res["url"]}
+        if hasattr(res, "data") and hasattr(res.data, "url") and res.data.url:
+            return {"url": res.data.url}
+            
+        raise HTTPException(status_code=400, detail="Supabase response did not contain an auth URL.")
+        
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"OAuth Generation Fault: {str(e)}")

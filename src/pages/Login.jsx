@@ -48,10 +48,18 @@ export default function Login() {
       const response = await fetch("http://127.0.0.1:8000/api/auth/oauth/github");
       const data = await response.json();
       
+      // If the response is not a 2xx success code, unpack the FastAPI custom detail message
+      if (!response.ok) {
+        const errorDetail = typeof data.detail === "string" 
+          ? data.detail 
+          : "OAuth route initialization rejected by server.";
+        throw new Error(errorDetail);
+      }
+      
       if (data.url) {
         window.location.href = data.url; // Relocate browser path context to GitHub Consent page
       } else {
-        throw new Error("Could not retrieve provider handshake address.");
+        throw new Error("Supabase response parsed successfully, but the redirect URL was missing.");
       }
     } catch (err) {
       setErrorMessage(err.message);
@@ -68,7 +76,7 @@ export default function Login() {
         </div>
 
         {errorMessage && (
-          <div className="bg-red-50 border border-red-200 text-red-700 text-xs p-3 rounded-lg font-mono">
+          <div className="bg-red-50 border border-red-200 text-red-700 text-xs p-3 rounded-lg font-mono whitespace-pre-wrap">
             ⚠️ Error: {errorMessage}
           </div>
         )}
