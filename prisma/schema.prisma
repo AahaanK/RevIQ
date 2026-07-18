@@ -1,0 +1,20 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider             = "prisma-client-py"
+  recursive_type_depth = 5
+}
+
+model TelemetryLog {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  client    String
+  feedback  String
+  priority  String   @default("Low")
+  badge     String   @default("Central Ledger")
+
+  @@map("telemetry_logs")
+}
