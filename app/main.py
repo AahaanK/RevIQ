@@ -152,6 +152,11 @@ def delete_log(log_id: int, current_user: dict = Depends(get_current_user)):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-# --- Mount Router Deliverables at the VERY BOTTOM to avoid circular reference loops ---
 from app.routes import auth
 app.include_router(auth.router)
+
+
+from app.routes import auth, ai
+
+app.include_router(auth.router)
+app.include_router(ai.router)  
