@@ -1,28 +1,98 @@
-import { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import PriorityAI from './pages/PriorityAI';
+import AIFeature from './pages/AIFeature';
 import DissatisfactionTracker from './pages/DissatisfactionTracker';
 import RecoveryPredictor from './pages/RecoveryPredictor';
 import Dashboard from './pages/Dashboard';
 import About from './pages/About';
 import Login from './pages/Login';
-import UiSandbox from './pages/UiSandbox';
 import Register from './pages/Register';
+import UiSandbox from './pages/UiSandbox';
+import ProtectedRoute from './components/ProtectedRoute';
 
-// 🔒 Token Check Guard Wrapper Component
-function ProtectedRoute({ children }) {
-  const token = localStorage.getItem("token");
-  
-  // If no validation token is stored locally, bounce them straight to login
-  if (!token) {
-    return <Navigate to="/login" replace />;
-  }
-  
-  // If token is found, let them view the secure node layout
-  return children;
+function AuthCallback() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const error = params.get("error");
+    const errorDesc = params.get("error_description");
+    const code = params.get("code");
+    const queryToken = params.get("access_token");
+
+    console.log("[AuthCallback] search:", location.search);
+    console.log("[AuthCallback] hash:", location.hash);
+    console.log("[AuthCallback] parsed -> error:", error, "code:", code, "queryToken:", queryToken);
+
+    if (error) {
+      console.error("OAuth Authorization Error:", errorDesc || error);
+      alert(`Authentication Failed: ${errorDesc || error}`);
+      navigate("/login", { replace: true });
+      return;
+    }
+
+    const hash = location.hash;
+    let hashToken = null;
+    if (hash && hash.includes("access_token")) {
+      const hashParams = new URLSearchParams(hash.replace("#", "?"));
+      hashToken = hashParams.get("access_token");
+    }
+
+    const tokenToSave = queryToken || hashToken;
+
+    if (tokenToSave) {
+      localStorage.setItem("token", tokenToSave);
+      window.dispatchEvent(new Event("storage"));
+      navigate("/dashboard", { replace: true });
+      return;
+    }
+
+    if (code) {
+      fetch("http://127.0.0.1:8000/api/auth/exchange", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: code }),
+      })
+        .then(async (res) => {
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            const detail = typeof data.detail === "string" ? data.detail : "Backend code exchange failed";
+            throw new Error(detail);
+          }
+          return data;
+        })
+        .then((data) => {
+          if (data.access_token) {
+            localStorage.setItem("token", data.access_token);
+            window.dispatchEvent(new Event("storage"));
+            navigate("/dashboard", { replace: true });
+          } else {
+            throw new Error("No access_token returned from server");
+          }
+        })
+        .catch((err) => {
+          console.error("OAuth Exchange Error:", err);
+          alert(`Could not complete single sign-on: ${err.message}`);
+          navigate("/login", { replace: true });
+        });
+      return;
+    }
+
+    console.warn("[AuthCallback] No code, token, or error present in the redirect. Check Supabase Auth > URL Configuration > Redirect URLs, and confirm the redirect_to used in /api/auth/oauth/github is allow-listed there.");
+    navigate("/login", { replace: true });
+  }, [location, navigate]);
+
+  return (
+    <div className="min-h-[60vh] flex flex-col items-center justify-center p-6 text-stone-600 font-mono text-sm space-y-3">
+      <div className="w-6 h-6 border-2 border-emerald-900 border-t-transparent rounded-full animate-spin"></div>
+      <div>Authenticating node clearance via GitHub...</div>
+    </div>
+  );
 }
 
 export default function App() {
@@ -44,16 +114,18 @@ export default function App() {
         
         <main className="flex-grow w-full">
           <Routes>
-            {/* Public Layout Pages */}
             <Route path="/" element={<Home isDarkMode={isDarkMode} />} />
             <Route path="/dissatisfaction-tracker" element={<DissatisfactionTracker isDarkMode={isDarkMode} />} />
             <Route path="/recovery-predictor" element={<RecoveryPredictor isDarkMode={isDarkMode} />} />
             <Route path="/about" element={<About isDarkMode={isDarkMode} />} />
             <Route path="/login" element={<Login isDarkMode={isDarkMode} />} />
             <Route path="/register" element={<Register isDarkMode={isDarkMode} />} />
+            
+            {/* Dedicated OAuth redirect callback endpoint */}
+            <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/sandbox" element={<UiSandbox isDarkMode={isDarkMode} />} />
+            <Route path="/ai-feature" element={<AIFeature isDarkMode={isDarkMode} />} />
 
-            {/* 🔴 PROTECTED NODE 1: Priority AI Gateway */}
             <Route 
               path="/priority-ai" 
               element={
@@ -63,7 +135,6 @@ export default function App() {
               } 
             />
 
-            {/* 🔴 PROTECTED NODE 2: Telemetry Core Dashboard */}
             <Route 
               path="/dashboard" 
               element={

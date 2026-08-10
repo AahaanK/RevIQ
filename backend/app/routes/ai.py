@@ -8,7 +8,7 @@ from google.genai import Client
 from google.genai import types
 from dotenv import load_dotenv
 from supabase import create_client, Client as SupabaseClient
-from backend.app.security import get_current_user
+from app.security import get_current_user
 
 load_dotenv()
 
@@ -196,7 +196,7 @@ def analyze_batch(payload: BatchAnalyzeRequest, current_user: dict = Depends(get
             ))
 
         except Exception:
-            logger.excepapption("Failed to analyze/update review id %s", item.id)
+            logger.exception("Failed to analyze/update review id %s", item.id)
             failed_ids.append(item.id)
 
     return BatchAnalyzeResponse(

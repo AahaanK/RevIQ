@@ -1,15 +1,19 @@
 import os
+import logging
+from urllib.parse import urlencode
 from fastapi import APIRouter, HTTPException, status, Request
 from pydantic import BaseModel, EmailStr, Field
-from app.security import hash_password, verify_password, create_access_token
+from backend.app.security import hash_password, verify_password, create_access_token
 from supabase import create_client, Client
 from dotenv import load_dotenv
 
-# Force load environment files before instantiating the client frame
 load_dotenv()
+
+logger = logging.getLogger("reviq.auth")
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 router = APIRouter(
@@ -17,12 +21,14 @@ router = APIRouter(
     tags=["Authentication"]
 )
 
-# Defer import to prevent circular compilation lock with main.py during hot reloads
-from app.main import limiter 
+from backend.app.main import limiter 
 
 class UserAuthInput(BaseModel):
     email: EmailStr
     password: str = Field(..., min_length=6, description="Password must be at least 6 characters long")
+
+class ExchangeCodeInput(BaseModel):
+    code: str
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
 def register_user(payload: UserAuthInput):
@@ -62,28 +68,44 @@ def login_user(request: Request, payload: UserAuthInput):
 
 @router.get("/oauth/github")
 def get_github_oauth_url():
-    """
-    Requests a secure server-side third-party callback handshake configuration link 
-    from Supabase targeting GitHub servers.
-    """
     try:
-        # Configuration object single-dictionary execution block
-        res = supabase.auth.sign_in_with_oauth({
+        params = {
             "provider": "github",
-            "options": {
-                "redirect_to": "http://localhost:5173/dashboard"
-            }
-        })
-        
-        # Parse across all response structures matching modern python-supabase versions
-        if hasattr(res, "url") and res.url:
-            return {"url": res.url}
-        if isinstance(res, dict) and "url" in res:
-            return {"url": res["url"]}
-        if hasattr(res, "data") and hasattr(res.data, "url") and res.data.url:
-            return {"url": res.data.url}
-            
-        raise HTTPException(status_code=400, detail="Supabase response did not contain an auth URL.")
-        
+            "redirect_to": "http://localhost:5173/auth/callback",
+        }
+        url = f"{SUPABASE_URL}/auth/v1/authorize?{urlencode(params)}"
+        return {"url": url}
     except Exception as e:
+        logger.exception("OAuth URL generation failed")
         raise HTTPException(status_code=400, detail=f"OAuth Generation Fault: {str(e)}")
+
+@router.post("/exchange")
+def exchange_oauth_code(payload: ExchangeCodeInput):
+    try:
+        res = supabase.auth.exchange_code_for_session({"auth_code": payload.code})
+        logger.info("Supabase exchange_code_for_session response: %s", res)
+
+        session = getattr(res, "session", None)
+        user = getattr(res, "user", None)
+
+        if session and getattr(session, "access_token", None):
+            user_email = getattr(user, "email", None) or "github_user@supabase.io"
+            user_id = getattr(user, "id", None) or "github_oauth"
+
+            token = create_access_token(data={"sub": user_email, "user_id": user_id})
+            return {"success": True, "access_token": token, "token_type": "bearer"}
+
+        logger.error("Supabase returned no valid session for code exchange: %s", res)
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                "Invalid session exchange from provider. This usually means the "
+                "GitHub Client Secret configured in Supabase is wrong, or the "
+                "redirect URL isn't allow-listed in Supabase Auth settings."
+            ),
+        )
+    except HTTPException as http_err:
+        raise http_err
+    except Exception as e:
+        logger.exception("OAuth code exchange crashed")
+        raise HTTPException(status_code=400, detail=f"OAuth exchange failed: {str(e)}")
