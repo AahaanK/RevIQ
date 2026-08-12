@@ -4,15 +4,21 @@ from collections import defaultdict
 from fastapi import APIRouter, HTTPException, Depends
 from supabase import create_client, Client
 from dotenv import load_dotenv
-from app.security import get_current_user
+try:
+    from backend.app.security import get_current_user
+except Exception:
+    from app.security import get_current_user
 
 load_dotenv()
 
 logger = logging.getLogger("reviq.analytics")
 
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY")
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+def get_supabase_client() -> Client:
+    url = os.getenv("SUPABASE_URL", "")
+    key = os.getenv("SUPABASE_KEY", "")
+    if not url or not key:
+        raise HTTPException(status_code=500, detail="Error: Missing SUPABASE_URL or SUPABASE_KEY in environment variables")
+    return create_client(url, key)
 
 router = APIRouter(
     prefix="/api/analytics",
@@ -26,7 +32,7 @@ FLAGGED_SENTIMENT_THRESHOLD = 0.4
 @router.get("/review-matrix")
 def get_review_matrix(current_user: dict = Depends(get_current_user)):
     try:
-        response = supabase.table("reviews").select("*").order("created_at", desc=True).execute()
+        response = get_supabase_client().table("reviews").select("*").order("created_at", desc=True).execute()
         reviews = response.data or []
 
         total_reviews = len(reviews)

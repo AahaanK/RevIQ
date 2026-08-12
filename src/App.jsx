@@ -52,8 +52,9 @@ function AuthCallback() {
       return;
     }
 
+    const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
     if (code) {
-      fetch("http://127.0.0.1:8000/api/auth/exchange", {
+      fetch(`${API_BASE}/api/auth/exchange`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code: code }),

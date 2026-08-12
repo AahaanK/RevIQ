@@ -13,7 +13,8 @@ export default function Login() {
     setErrorMessage("");
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/auth/login", {
+      const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
+      const response = await fetch(`${API_BASE}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email, password: password }),
@@ -45,7 +46,8 @@ export default function Login() {
   const handleGitHubLogin = async () => {
     try {
       setErrorMessage("");
-      const response = await fetch("http://127.0.0.1:8000/api/auth/oauth/github");
+      const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
+      const response = await fetch(`${API_BASE}/api/auth/oauth/github`);
       const data = await response.json();
       
       // If the response is not a 2xx success code, unpack the FastAPI custom detail message

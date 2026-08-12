@@ -8,19 +8,35 @@ from supabase import create_client, Client
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
-from app.security import get_current_user
+try:
+    from backend.app.security import get_current_user
+except Exception:
+    from app.security import get_current_user
 
 limiter = Limiter(key_func=get_remote_address)
 
 load_dotenv()
 
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+SUPABASE_URL = os.getenv("SUPABASE_URL", "")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY", "")
 
-if not SUPABASE_URL or not SUPABASE_KEY:
-    raise RuntimeError("Error: Missing SUPABASE_URL or SUPABASE_KEY in .env file")
+def get_supabase_client() -> Client:
+    url = os.getenv("SUPABASE_URL") or SUPABASE_URL
+    key = os.getenv("SUPABASE_KEY") or SUPABASE_KEY
+    if not url or not key:
+        raise HTTPException(status_code=500, detail="Error: Missing SUPABASE_URL or SUPABASE_KEY in environment variables")
+    return create_client(url, key)
 
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+if SUPABASE_URL and SUPABASE_KEY:
+    supabase: Optional[Client] = create_client(SUPABASE_URL, SUPABASE_KEY)
+else:
+    supabase = None
+
+def _db() -> Client:
+    global supabase
+    if supabase is None:
+        supabase = get_supabase_client()
+    return supabase
 
 app = FastAPI(
     title="RevIQ Telemetry API - Fresh Supabase Edition", 
@@ -34,10 +50,7 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173"
-    ],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -137,7 +150,10 @@ def delete_log(log_id: int, current_user: dict = Depends(get_current_user)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-from app.routes import auth, ai, analytics
+try:
+    from backend.app.routes import auth, ai, analytics
+except Exception:
+    from app.routes import auth, ai, analytics
 
 app.include_router(auth.router)
 app.include_router(ai.router)

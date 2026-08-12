@@ -8,7 +8,10 @@ from google.genai import Client
 from google.genai import types
 from dotenv import load_dotenv
 from supabase import create_client, Client as SupabaseClient
-from app.security import get_current_user
+try:
+    from backend.app.security import get_current_user
+except Exception:
+    from app.security import get_current_user
 
 load_dotenv()
 
@@ -19,15 +22,24 @@ router = APIRouter(
     tags=["AI Features"]
 )
 
-API_KEY = os.getenv("GEMINI_API_KEY")
-if not API_KEY:
-    raise RuntimeError("System Fault: GEMINI_API_KEY missing from environment configuration matrix.")
+def get_gemini_client() -> Client:
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="System Fault: GEMINI_API_KEY missing from environment configuration matrix."
+        )
+    return Client(api_key=api_key)
 
-client = Client(api_key=API_KEY)
-
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY")
-supabase: SupabaseClient = create_client(SUPABASE_URL, SUPABASE_KEY)
+def get_supabase_client() -> SupabaseClient:
+    url = os.getenv("SUPABASE_URL", "")
+    key = os.getenv("SUPABASE_KEY", "")
+    if not url or not key:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="System Fault: SUPABASE_URL or SUPABASE_KEY missing from environment."
+        )
+    return create_client(url, key)
 
 FLAGGED_SENTIMENT_THRESHOLD = 0.4
 
@@ -50,7 +62,7 @@ def generate_ai_insight(payload: AIRequestPayload):
             "formatted in clear markdown. Keep your tone professional, direct, and concise."
         )
 
-        response = client.models.generate_content(
+        response = get_gemini_client().models.generate_content(
             model='gemini-3.5-flash',
             contents=payload.prompt,
             config=types.GenerateContentConfig(
@@ -125,7 +137,7 @@ def _analyze_single_comment(comment: str) -> dict:
     )
 
     try:
-        response = client.models.generate_content(
+        response = get_gemini_client().models.generate_content(
             model='gemini-3.5-flash',
             contents=comment,
             config=types.GenerateContentConfig(
@@ -174,7 +186,7 @@ def analyze_batch(payload: BatchAnalyzeRequest, current_user: dict = Depends(get
             result = _analyze_single_comment(item.comment)
 
             update_response = (
-                supabase.table("reviews")
+                get_supabase_client().table("reviews")
                 .update({
                     "sentiment_score": result["sentiment_score"],
                     "is_flagged": result["is_flagged"],

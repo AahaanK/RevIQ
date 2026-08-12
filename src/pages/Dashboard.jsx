@@ -15,12 +15,14 @@ export default function Dashboard() {
     setTimeout(() => setFeedbackMsg(null), 3500);
   };
 
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
+
   // 1. READ: Fetch logs
   const refreshLogs = () => {
     setLoading(true);
     const token = localStorage.getItem("token");
 
-    fetch('http://127.0.0.1:8000/api/v1/logs', {
+    fetch(`${API_BASE}/api/v1/logs`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -76,7 +78,7 @@ export default function Dashboard() {
     showFeedback(`Log record ${displayToken} deleted successfully!`, "danger");
 
     if (targetId) {
-      fetch(`http://127.0.0.1:8000/api/v1/logs/${targetId}`, {
+      fetch(`${API_BASE}/api/v1/logs/${targetId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -117,7 +119,7 @@ export default function Dashboard() {
     setEditingLog(null);
 
     if (targetId) {
-      fetch(`http://127.0.0.1:8000/api/v1/logs/${targetId}`, {
+      fetch(`${API_BASE}/api/v1/logs/${targetId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

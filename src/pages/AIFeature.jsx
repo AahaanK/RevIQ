@@ -20,7 +20,8 @@ export default function AIFeature() {
     setResult('');
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/ai/generate', {
+      const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
+      const response = await fetch(`${API_BASE}/api/ai/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
